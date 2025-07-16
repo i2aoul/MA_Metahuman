@@ -4,8 +4,8 @@ Dieses Projekt zielt darauf ab, die Genauigkeit von neuronalen Netzwerken zur **
 
 ## 🔗 Verwendete Basis
 
-Dieses Projekt basiert auf dem [**GASP-Projekt**](https://github.com/PolygonHive/GASP-ALS.git), welches als Grundlage für die Szenenlogik und Datenaufzeichnung dient.  
-Insbesondere wurde die Blueprint-Klasse `CBP_Sandbox_Character` erweitert. Diese ist im Projekt unter **Blueprints** zu finden.
+Dieses Projekt basiert auf dem [**GASP-Projekt**](https://github.com/PolygonHive/GASP-ALS.git), welches als Grundlage für die Szenenumgebung dient.  
+Zuständig für die Animationen ist die Blueprint-Klasse `CBP_Sandbox_Character`, diese ist im Projekt unter **Blueprints** zu finden.
 
 ---
 
