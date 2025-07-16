@@ -1,5 +1,3 @@
-// MathHelpers.cpp
-
 #include "MathHelpers.h"
 #include "Math/UnrealMathUtility.h"
 
@@ -8,7 +6,7 @@ namespace MathHelpers
     FMatrix ComputeIntrinsicMatrix(float FOV, int ImageWidth, int ImageHeight)
     {
         float fx = ImageWidth / (2.0f * FMath::Tan(FOV * 0.5f * (PI / 180.0f)));
-        float fy = fx; // quadratische Pixel
+        float fy = fx; 
         float cx = ImageWidth * 0.5f;
         float cy = ImageHeight * 0.5f;
 

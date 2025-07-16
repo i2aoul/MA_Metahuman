@@ -14,7 +14,7 @@ namespace MathHelpers
      * @param FOV         Vertical field of view in degrees.
      * @param ImageWidth  Width of the image in pixels.
      * @param ImageHeight Height of the image in pixels.
-     * @return            4×4 Intrinsic matrix (fx  0  cx  0; 0  fy  cy  0; 0  0  1  0; 0  0  0  1).
+     * @return            4×4 Intrinsic matrix.
      */
     FMatrix ComputeIntrinsicMatrix(float FOV, int ImageWidth, int ImageHeight);
 

@@ -11,28 +11,37 @@ class GASPALS_API UBoneProcessor : public UObject
     GENERATED_BODY()
 
 public:
-    /** Initialize with world context and the list of bone-name filters */
+    /**
+     * Initialisiert das System mit dem aktuellen World-Kontext und einer Liste von Schlüsselwörtern,
+     * die zur Filterung relevanter Bones verwendet werden.
+     * @param WorldContext - Zeiger auf die aktuelle Spielwelt.
+     * @param FilterKeywords - Liste von Schlüsselwörtern zur Auswahl bestimmter Bone-Namen.
+     */
     void Initialize(UWorld* WorldContext, const TArray<FString>& FilterKeywords);
 
     /**
-     * Processes all characters in the scene:
-     *  - extracts 3D bone positions and writes to Csv3D
-     *  - projects to 2D and writes to Csv2D
-     *  - optionally captures images
+     * Verarbeitet alle Charaktere in der Szene:
+     *  - Extrahiert die 3D-Koordinaten der Bones und schreibt sie in die Datei Csv3D.
+     *  - Projiziert die 3D-Koordinaten auf 2D-Bildebene und schreibt sie in die Datei Csv2D.
+     *  - Optional: Bildaufnahme je nach Konfiguration möglich.
+     * @param FrameIndex - Der aktuelle Frame-Index zur Synchronisation der Daten.
+     * @param Csv2D - Dateihandle für die 2D-Koordinatendatei (CSV).
+     * @param Csv3D - Dateihandle für die 3D-Koordinatendatei (CSV).
      */
     void ProcessAllCharacters(int32 FrameIndex, IFileHandle* Csv2D, IFileHandle* Csv3D);
 
-    /** If true, will capture and save images each frame */
+    /** Wenn true, werden pro Frame Bilder aufgenommen und gespeichert */
     UPROPERTY()
     bool bCaptureImages = false;
 
-    /** Directory where captured images will be saved */
+    /** Verzeichnis, in dem die aufgenommenen Bilder gespeichert werden */
     UPROPERTY()
     FString OutputDirectory;
 
-    /** Helper object used to capture images */
+    /** Helferobjekt, das für das Aufnehmen von Bildern verwendet wird */
     UPROPERTY()
     class UImageCapture* ImageCapture;
+
 
 private:
     UWorld* WorldContext = nullptr;

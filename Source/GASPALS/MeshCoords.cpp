@@ -4,11 +4,11 @@
 #include "Rendering/SkeletalMeshRenderData.h" 
 #include "Rendering/SkinWeightVertexBuffer.h"
 #include "DrawDebugHelpers.h" 
-#include <fstream>    // F�r std::ifstream und std::ofstream
-#include <sstream>    // F�r std::stringstream
-#include <string>     // F�r std::string
-#include <iostream>   // Optional f�r Debug-Ausgaben
-#include <iomanip> // F�r std::fixed und std::setprecision
+#include <fstream>   
+#include <sstream>    
+#include <string>     
+#include <iostream>   
+#include <iomanip> 
 #include "Containers/Array.h"
 #include <fstream>
 #include <sstream>
@@ -33,15 +33,14 @@
 #include "UImageCapture.h"
 #include "CsvUtils.h"
 #include "Async/Async.h"
-#include "ImageUtils.h"        // FImageUtils::CompressImageArray
-#include "Misc/FileHelper.h"   // FFileHelper::SaveArrayToFile
+#include "ImageUtils.h"       
+#include "Misc/FileHelper.h"  
 #include "HAL/PlatformFilemanager.h"
 #include "IImageWrapper.h"
 #include "IImageWrapperModule.h"
 #include "Modules/ModuleManager.h"
 #include "Windows/HideWindowsPlatformTypes.h"
 
-// Sets default values
 AMeshCoords::AMeshCoords()
 {
     PrimaryActorTick.bCanEverTick = true;
@@ -67,28 +66,25 @@ AMeshCoords::AMeshCoords()
     };
 }
 
-// Called when the game starts or when spawned
 void AMeshCoords::BeginPlay()
 {
     Super::BeginPlay();
     Initialize();
 }
 
-// Called every frame
 void AMeshCoords::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
     TickCounter++;
-    if (TickCounter % 5 == 0) // Falls 3 Ticks vergangen sind
+    int32 x = 0;
+	if (TickCounter % x == 0)   // Nehme nur alle x Ticks die Daten auf, um die Performance zu verbessern
     {
         FindAllCharactersAndTheirComponents();
     }
 
     TimeAccumulated += DeltaTime;
     FrameCount++;
-
-    if (TimeAccumulated >= 1.0f) // alle 1 Sekunde neu berechnen
-    {
+    if (TimeAccumulated >= 1.0f) 
         AverageFPS = FrameCount / TimeAccumulated;
         FrameCount = 0;
         TimeAccumulated = 0.f;
@@ -184,13 +180,11 @@ void AMeshCoords::ProcessBones(
     {
         return;
     }
-
     UTextureRenderTarget2D* RT = CaptureComponent->TextureTarget;
     const float Width = RT ? RT->SizeX : 0.f;
     const float Height = RT ? RT->SizeY : 0.f;
     const float FOV = CaptureComponent->FOVAngle;
     const FMatrix Intrinsic = MathHelpers::ComputeIntrinsicMatrix(FOV, Width, Height);
-
     int32 BoneCount = InMeshComponent->GetNumBones();
     for (int32 BoneIndex = 0; BoneIndex < BoneCount; ++BoneIndex)
     {
@@ -200,10 +194,8 @@ void AMeshCoords::ProcessBones(
         {
             continue;
         }
-
         FVector WorldPosition = InMeshComponent->GetBoneLocation(BoneName);
         FVector CamSpacePos = CameraComponent->GetComponentTransform().InverseTransformPosition(WorldPosition);
-
         FString Data3D = FString::Printf(TEXT(";%0.3f;%0.3f;%0.3f"), CamSpacePos.X, CamSpacePos.Y, CamSpacePos.Z);
         Data3D.ReplaceInline(TEXT("."), TEXT(","));
         if (Bone3DCache[LoopIndex].Contains(BoneIndex))
@@ -231,7 +223,6 @@ void AMeshCoords::ProcessBones(
             }
         }
     }
-    // … dein Loop, in dem images und RT gültig sind …
     if (images && RT)
     {
         FTextureRenderTargetResource* RTResource = RT->GameThread_GetRenderTargetResource();
@@ -275,30 +266,22 @@ void AMeshCoords::ProcessBones(
 
 }
 
-
-
 void AMeshCoords::SaveMetaHumanData()
 {
    
  
     IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
     int32 f = 0;
-
     for (int32 MetaHumanIndex = 0; MetaHumanIndex < Dirs.Num(); ++MetaHumanIndex)
     {
-
         FString FileDir = Dirs[MetaHumanIndex];
         PlatformFile.CreateDirectoryTree(*FileDir);
-
         FString MetahumanDir2D = FileDir / TEXT("Metahuman2D.csv");
         FString MetahumanDir3D = FileDir / TEXT("Metahuman3D.csv");
-     
-
         TMap<int32, FString>& Face = Metahuman3DMeshDataFace[MetaHumanIndex];
         TMap<int32, FString>& Face2D = Metahuman2DMeshDataFace[MetaHumanIndex];
         TMap<int32, FString>& Bod = Metahuman3DMeshDataBod[MetaHumanIndex];
         TMap<int32, FString>& Bod2D = Metahuman2DMeshDataBod[MetaHumanIndex];
-        
         CsvUtils::SaveCached3DDataToCSVs(MetahumanDir3D,Face, Bod);
         CsvUtils::SaveCached2DDataToCSVs(MetahumanDir2D,Face2D, Bod2D);
 		CsvUtils::WriteNumberToFile(AverageFPS,FileDir/TEXT("AVG_FPS.txt"));
@@ -308,23 +291,19 @@ void AMeshCoords::SaveMetaHumanData()
 
 void AMeshCoords::Initialize()
 {
-    // Holen aller Character in der Szene
     TArray<AActor*> Characters;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACharacter::StaticClass(), Characters);
     TArray<FName> StaticMarkerNames;
     TArray<FVector> StaticMarkerPositions;
-    // Schleife durch alle gefundenen Characters
     for (AActor* Actor : Characters)
     {
         ACharacter* Character = Cast<ACharacter>(Actor);
         if (Character)
         {
-            // Für jeden Character die Maps initialisieren
             Metahuman2DMeshDataFace.Add(TMap<int32, FString>());
             Metahuman3DMeshDataFace.Add(TMap<int32, FString>());
             Metahuman2DMeshDataBod.Add(TMap<int32, FString>());
             Metahuman3DMeshDataBod.Add(TMap<int32, FString>());
-            // Character Name und zugehöriges Verzeichnis generieren
             FString CharacterName = Character->GetName();
             FString FileDir = Dir / CharacterName;
             Dirs.Add(FileDir);

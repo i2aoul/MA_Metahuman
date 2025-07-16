@@ -17,7 +17,6 @@ void UBoneProcessor::Initialize(UWorld* InWorld, const TArray<FString>& InFilter
     WorldContext = InWorld;
     FilterKeywords = InFilterKeywords;
 }
-
 void UBoneProcessor::ProcessAllCharacters(int32 FrameIndex, IFileHandle* Csv2D, IFileHandle* Csv3D)
 {
     if (!WorldContext) return;
@@ -29,17 +28,12 @@ void UBoneProcessor::ProcessAllCharacters(int32 FrameIndex, IFileHandle* Csv2D, 
     {
         ACharacter* Char = Cast<ACharacter>(A);
         if (!Char) continue;
-
-        // Alle Komponenten sammeln
         TArray<USkeletalMeshComponent*> MeshComps;
         Char->GetComponents<USkeletalMeshComponent>(MeshComps);
-
         TArray<UCameraComponent*> CamComps;
         Char->GetComponents<UCameraComponent>(CamComps);
-
         TArray<USceneCaptureComponent2D*> SCComps;
         Char->GetComponents<USceneCaptureComponent2D>(SCComps);
-
         for (auto* Mesh : MeshComps)
         {
             for (auto* Cam : CamComps)
@@ -47,31 +41,22 @@ void UBoneProcessor::ProcessAllCharacters(int32 FrameIndex, IFileHandle* Csv2D, 
                 for (auto* SC : SCComps)
                 {
                     if (!Mesh->GetSkeletalMeshAsset() || !SC->TextureTarget) continue;
-
-                    // Pro Bone
                     const int32 NumBones = Mesh->GetNumBones();
                     FMatrix Intr = MathHelpers::ComputeIntrinsicMatrix(
                         Cam->FieldOfView,
                         SC->TextureTarget->SizeX,
                         SC->TextureTarget->SizeY
                     );
-
                     for (int32 i = 0; i < NumBones; ++i)
                     {
                         FName BoneName = Mesh->GetBoneName(i);
                         FString BoneStr = BoneName.ToString();
-
-                        // Filter
                         bool bMatch = FilterKeywords.Num() == 0;
                         for (auto& K : FilterKeywords)
                             if (BoneStr.Contains(K)) { bMatch = true; break; }
                         if (!bMatch) continue;
-
-                        // Welt ? Kamera-Raum
                         FVector WorldPos = Mesh->GetBoneLocation(BoneName);
                         FVector CamSpace = Cam->GetComponentTransform().InverseTransformPosition(WorldPos);
-
-                        // 3D schreiben
                         {
                             FString Line3D = FString::Printf(
                                 TEXT("%d;%s;%s;%.3f;%.3f;%.3f\n"),
@@ -82,8 +67,6 @@ void UBoneProcessor::ProcessAllCharacters(int32 FrameIndex, IFileHandle* Csv2D, 
                             );
                       
                         }
-
-                        // 2D-Projektion
                         FVector2D Img;
                         if (MathHelpers::ProjectToImage(Intr, CamSpace, Img))
                         {
@@ -97,8 +80,6 @@ void UBoneProcessor::ProcessAllCharacters(int32 FrameIndex, IFileHandle* Csv2D, 
                       
                         }
                     }
-
-                    // Optional: Bild speichern
                     if (bCaptureImages)
                     {
                         ImageCapture->Capture(SC, OutputDirectory, FString::Printf(TEXT("%s_%d.png"), *Char->GetName(), FrameIndex));

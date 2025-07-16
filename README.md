@@ -28,12 +28,16 @@ Um mit der Datengenerierung zu beginnen, muss ein MetaHuman-Charakter herunterge
    - Unter **Tags** einen neuen Tag im `Index[0]` mit dem Namen  
      `"RTG_UEFN_to_Metahuman_nrw"` hinzufügen.
 
-5. **Blueprint-Events einfügen:**
+5. **LODSync konfigurieren:**
+   - Wähle die Komponente `LODSync` im Komponentenbaum aus.
+   - Setze im Details-Fenster den Wert **Num LODs** auf `4`, um alle benötigten LOD-Stufen korrekt zu synchronisieren.
+
+6. **Blueprint-Events einfügen:**
    - Öffne den **Event Graph**.
    - Füge die Nodes **Parent: Tick** und **Parent: BeginPlay** ein.
    - Weitere Logik ist nicht notwendig.
 
-6. **MetaHuman in Szene platzieren:**
+7. **MetaHuman in Szene platzieren:**
    - Jetzt kann der vorbereitete MetaHuman in der Szene platziert und zur automatisierten Datengenerierung verwendet werden.
 
 ---
