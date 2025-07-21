@@ -1,6 +1,4 @@
-﻿/// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -21,18 +19,18 @@ class GASPALS_API AMeshCoords : public AActor
 public:
 	AMeshCoords();
 	/**
- * Verarbeitet die Bones eines Skelett-Meshes.
- * Extrahiert 2D- und 3D-Koordinaten, speichert sie in den übergebenen Caches und speichert optional Bilder.
- *
- * @param InMeshComponent Das zu analysierende Skeletal Mesh.
- * @param CameraComponent Die Kamera, von der projiziert wird.
- * @param CaptureComponent Optionaler SceneCaptureComponent2D zum Speichern von Bildern.
- * @param FilterKeywords Liste an Schlüsselwörtern zur Filterung der Bones.
- * @param Bone2DCache Cache zur Speicherung der projizierten 2D-Koordinaten.
- * @param Bone3DCache Cache zur Speicherung der 3D-Koordinaten.
- * @param LoopIndex Index zur Identifikation des Frames oder der Iteration.
- * @param images Wenn true, werden Bilder gespeichert.
- */
+	 * Verarbeitet die Bones eines Skelett-Meshes.
+	 * Extrahiert 2D- und 3D-Koordinaten, speichert sie in den übergebenen Caches und speichert optional Bilder.
+	 *
+	 * @param InMeshComponent Das zu analysierende Skeletal Mesh.
+	 * @param CameraComponent Die Kamera, von der projiziert wird.
+	 * @param CaptureComponent Optionaler SceneCaptureComponent2D zum Speichern von Bildern.
+	 * @param FilterKeywords Liste an Schlüsselwörtern zur Filterung der Bones.
+	 * @param Bone2DCache Cache zur Speicherung der projizierten 2D-Koordinaten.
+	 * @param Bone3DCache Cache zur Speicherung der 3D-Koordinaten.
+	 * @param LoopIndex Index zur Identifikation des Frames oder der Iteration.
+	 * @param images Wenn true, werden Bilder gespeichert.
+	 */
 	void ProcessBones(USkeletalMeshComponent* InMeshComponent, UCameraComponent* CameraComponent, USceneCaptureComponent2D* CaptureComponent, const TArray<FString>& FilterKeywords, TArray<TMap<int32, FString>>& Bone2DCache, TArray<TMap<int32, FString>>& Bone3DCache, int32 LoopIndex, bool images);
 
 	/**

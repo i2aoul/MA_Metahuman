@@ -40,11 +40,16 @@
 #include "IImageWrapperModule.h"
 #include "Modules/ModuleManager.h"
 #include "Windows/HideWindowsPlatformTypes.h"
-
+#include "Misc/Paths.h"
+#include "HAL/PlatformMisc.h"
 AMeshCoords::AMeshCoords()
 {
     PrimaryActorTick.bCanEverTick = true;
-    Dir = TEXT("F:/MetaData");  
+    Dir = FPlatformMisc::GetEnvironmentVariable(TEXT("METADATA_PATH"));
+    if (Dir.IsEmpty())
+    {
+        Dir = FPaths::Combine(FPaths::ProjectDir(), TEXT("MetaData"));
+    }
     FilterKeywords = {
       TEXT("neck_01"),
       TEXT("spine_01"),
@@ -88,10 +93,8 @@ void AMeshCoords::Tick(float DeltaTime)
         AverageFPS = FrameCount / TimeAccumulated;
         FrameCount = 0;
         TimeAccumulated = 0.f;
-
-    }
-
 }
+
 
 void AMeshCoords::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {

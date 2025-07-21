@@ -1,5 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 using System.IO;
 using UnrealBuildTool;
 using UnrealBuildTool.Rules;
@@ -32,15 +31,14 @@ public class GASPALS : ModuleRules
     "MovieScene",
     "MovieSceneTracks",
     "AssetRegistry",
-            "Json",           // <-- hier
+            "Json",        
     "JsonUtilities" });
 
 
         PrivateDependencyModuleNames.AddRange(new string[] {
-		// You can list dependencies that should only be used privately in this module
-        "OpenCV", // If you have an OpenCV module setup, add it here
-        "RHI",    // Example of other private dependencies
-        "RenderCore",  // Another example
+        "OpenCV",
+        "RHI", 
+        "RenderCore", 
 		"Core",
         "Renderer",
         "CoreUObject",
@@ -57,7 +55,7 @@ public class GASPALS : ModuleRules
         "SlateCore",
          "RHI",
         "RenderCore",
-            "Json",           // <-- hier
+            "Json",          
     "JsonUtilities"
         });
         

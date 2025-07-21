@@ -1,5 +1,3 @@
-// BoneProcessor.cpp
-
 #include "UBoneProcessor.h"
 #include "CsvUtils.h"
 #include "MathHelpers.h"
